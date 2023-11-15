@@ -129,7 +129,7 @@ spec:
 ```
 
 ## Добавим в файл hosts строку
-    192.168.0.150 qveex.dev
+    127.0.0.1 qveex.dev
 
 ## Создание config map
     kubectl apply -f configMap.yaml
