@@ -134,11 +134,11 @@ spec:
     app: app-react
 ```
 
-## Приняем `deployment` и `service`
+## Применяем `deployment` и `service`
     $ kubectl apply -f configMap.yaml
     $ kubectl apply -f deployment.yaml
 
-## Узнаем заупущенные ноды
+## Узнаем запущенные ноды
     $ kubectl get pods -o wide
 ```
 NAME                         READY   STATUS    RESTARTS        AGE   IP               NODE            NOMINATED NODE   READINESS GATES
