@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-map
+data:
+  REACT_APP_USERNAME: "qveex"
+  REACT_APP_COMPANY_NAME: "qveex inc"
