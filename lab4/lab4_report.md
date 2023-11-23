@@ -123,7 +123,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: app-service
+  name: balancer-service
 spec:
   type: LoadBalancer
   ports:
@@ -142,37 +142,40 @@ spec:
     $ kubectl get pods -o wide
 ```
 NAME                         READY   STATUS    RESTARTS        AGE   IP               NODE            NOMINATED NODE   READINESS GATES
-app-react-559f6b7c54-njp28   1/1     Running   0               6s    192.168.20.128   multinode-m02   <none>           <none>
-app-react-559f6b7c54-q8sb5   1/1     Running   1 (3m50s ago)   11m   192.168.10.200   multinode       <none>           <none>
+app-react-559f6b7c54-g9rbr   1/1     Running   0               20s   192.168.20.128   multinode-m02   <none>           <none>
+app-react-559f6b7c54-pvwv9   1/1     Running   3 (3m17s ago)   15h   192.168.10.216   multinode       <none>           <none>
 ```
 
 ## Включаем туннелирование
-    minikube service app-service
+    minikube service balancer-service -p multinode
 
-## Открываем сайт
+## Открываем сайт первый раз
 ![1](front1.png)
 
+## Открываем сайт второй раз
+![2](front2.png)
+
 ## Container и Container IP
-Они могут меняться, так как у нас есть два контейнера и `LoadBalancer` перенаправляет нас на один из них
+Они меняются, так как у нас есть два контейнера и `LoadBalancer` перенаправляет нас на один из них
 
 ## Узнаем имя соседнего пода
-    $ kubectl exec app-react-559f6b7c54-njp28 -- nslookup 192.168.20.128
+    $ kubectl exec app-react-559f6b7c54-pvwv9 -- nslookup 192.168.20.128
 ```
 Server:         10.96.0.10
 Address:        10.96.0.10:53
 
-128.20.168.192.in-addr.arpa     name = 192-168-20-128.app-service.default.svc.cluster.local
+128.20.168.192.in-addr.arpa     name = 192-168-20-128.balancer-service.default.svc.cluster.local
 ```
 
 ## Ping соседа
-    $ kubectl exec app-react-559f6b7c54-njp28 -- ping 192-168-20-128.app-service.default.svc.cluster.local
+    $ kubectl exec app-react-559f6b7c54-pvwv9 -- ping 192-168-20-128.balancer-service.default.svc.cluster.local
 ```
-PING 192-168-20-128.app-service.default.svc.cluster.local (192.168.20.128): 56 data bytes
-64 bytes from 192.168.20.128: seq=0 ttl=64 time=0.043 ms
-64 bytes from 192.168.20.128: seq=1 ttl=64 time=0.072 ms
-64 bytes from 192.168.20.128: seq=2 ttl=64 time=0.060 ms
-64 bytes from 192.168.20.128: seq=3 ttl=64 time=0.061 ms
+PING 192-168-20-128.balancer-service.default.svc.cluster.local (192.168.20.128): 56 data bytes
+64 bytes from 192.168.20.128: seq=0 ttl=62 time=0.193 ms
+64 bytes from 192.168.20.128: seq=1 ttl=62 time=0.139 ms
+64 bytes from 192.168.20.128: seq=2 ttl=62 time=0.320 ms
+64 bytes from 192.168.20.128: seq=3 ttl=62 time=0.118 ms
 ```
 
 ## Схема организации контейнеров и сервисов
-![2](lab4.png)
+![3](lab4.png)
